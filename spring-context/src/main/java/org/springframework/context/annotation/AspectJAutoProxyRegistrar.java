@@ -42,15 +42,19 @@ class AspectJAutoProxyRegistrar implements ImportBeanDefinitionRegistrar {
 	public void registerBeanDefinitions(
 			AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
 
+		// 如有必要，注册AspectJ注解自动代理创建器
 		AopConfigUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary(registry);
 
+		// 获取@EnableAspectJAutoProxy注解属性
 		AnnotationAttributes enableAspectJAutoProxy =
 				AnnotationConfigUtils.attributesFor(importingClassMetadata, EnableAspectJAutoProxy.class);
 		if (enableAspectJAutoProxy != null) {
 			if (enableAspectJAutoProxy.getBoolean("proxyTargetClass")) {
+				// 强制自动代理创建器使用类代理
 				AopConfigUtils.forceAutoProxyCreatorToUseClassProxying(registry);
 			}
 			if (enableAspectJAutoProxy.getBoolean("exposeProxy")) {
+				// 强制自动代理创建者公开代理
 				AopConfigUtils.forceAutoProxyCreatorToExposeProxy(registry);
 			}
 		}
