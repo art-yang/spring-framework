@@ -92,6 +92,7 @@ public final class ExposeInvocationInterceptor implements MethodInterceptor, Pri
 	@Nullable
 	public Object invoke(MethodInvocation mi) throws Throwable {
 		MethodInvocation oldInvocation = invocation.get();
+		// 它可以让后面的增强器都拿到当前正在执行的 MethodInvocation
 		invocation.set(mi);
 		try {
 			return mi.proceed();
