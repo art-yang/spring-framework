@@ -1000,7 +1000,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// 合并bean定义不是合成的 && 具有实例化感知Bean后处理器
 		if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
 			for (SmartInstantiationAwareBeanPostProcessor bp : getBeanPostProcessorCache().smartInstantiationAware) {
-				// bp获取早期bean引用
+				// bp处理保留对象，获取早期bean引用
 				exposedObject = bp.getEarlyBeanReference(exposedObject, beanName);
 			}
 		}
