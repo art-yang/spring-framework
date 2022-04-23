@@ -254,6 +254,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		Object beanInstance;
 
 		// Eagerly check singleton cache for manually registered singletons.
+		// 急切地检查单例缓存以获取手动注册的单例。
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
 			if (logger.isTraceEnabled()) {
@@ -271,6 +272,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		else {
 			// Fail if we're already creating this bean instance:
 			// We're assumably within a circular reference.
+			// 如果我们已经在创建这个bean实例则失败: 我们可能在循环引用中。
+			// 如果原型bean之间互相依赖，则一定会引发无限循环，此处会抛出循环依赖的异常
 			if (isPrototypeCurrentlyInCreation(beanName)) {
 				throw new BeanCurrentlyInCreationException(beanName);
 			}
@@ -1156,6 +1159,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	/**
 	 * Return whether the specified prototype bean is currently in creation
 	 * (within the current thread).
+	 * 返回指定的原型bean当前是否正在创建中（在当前线程中）。
+	 *
 	 * @param beanName the name of the bean
 	 */
 	protected boolean isPrototypeCurrentlyInCreation(String beanName) {
