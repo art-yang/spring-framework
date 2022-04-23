@@ -1269,6 +1269,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * Determine the original bean name, resolving locally defined aliases to canonical names.
+	 * 确定原始bean名称，将本地定义的别名解析为规范名称。
+	 *
 	 * @param name the user-specified name
 	 * @return the original bean name
 	 */
