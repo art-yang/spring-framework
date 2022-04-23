@@ -1784,15 +1784,23 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * Mark the specified bean as already created (or about to be created).
 	 * <p>This allows the bean factory to optimize its caching for repeated
 	 * creation of the specified bean.
+	 * <p>
+	 * 将指定的bean标记为已创建（或即将创建）。
+	 * 这允许bean工厂优化其缓存以重复创建指定的bean
+	 *
 	 * @param beanName the name of the bean
 	 */
 	protected void markBeanAsCreated(String beanName) {
+		// bean未创建过
 		if (!this.alreadyCreated.contains(beanName)) {
+			// 同步锁: mergedBeanDefinitions
 			synchronized (this.mergedBeanDefinitions) {
+				// bean未创建过
 				if (!this.alreadyCreated.contains(beanName)) {
 					// Let the bean definition get re-merged now that we're actually creating
 					// the bean... just in case some of its metadata changed in the meantime.
 					clearMergedBeanDefinition(beanName);
+					// bean名称加入到已创建bean的名称map中
 					this.alreadyCreated.add(beanName);
 				}
 			}
