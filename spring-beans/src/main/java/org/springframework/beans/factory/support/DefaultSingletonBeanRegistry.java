@@ -190,20 +190,36 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
 		// Quick check for existing instance without full singleton lock
+		// 快速检查没有完整单例锁的现有实例
+		// 1.从(一级缓存)单例对象Map中拿
 		Object singletonObject = this.singletonObjects.get(beanName);
+		// 若(一级缓存)单例对象未拿到 && 单例bean当前正在创建中
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
+			// 2.从(二级缓存)早期单例对象Map中拿
 			singletonObject = this.earlySingletonObjects.get(beanName);
+			// 若(二级缓存)早期单例对象未拿到 && 允许早期引用
 			if (singletonObject == null && allowEarlyReference) {
+				// 3.同步锁(一级缓存)单例对象Map
 				synchronized (this.singletonObjects) {
 					// Consistent creation of early reference within full singleton lock
+					// 在完整的单例锁中，一致地创建早期引用
+					// 4.从(一级缓存)单例对象Map中拿
 					singletonObject = this.singletonObjects.get(beanName);
+					// 若(一级缓存)单例对象未拿到
 					if (singletonObject == null) {
+						// 5.从(二级缓存)早期单例对象Map中拿
 						singletonObject = this.earlySingletonObjects.get(beanName);
+						// 若(二级缓存)早期单例对象未拿到
 						if (singletonObject == null) {
+							// 6.从(三级缓存)单例工厂Map中拿
 							ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
+							// 若(三级缓存)单例工厂拿到了
 							if (singletonFactory != null) {
+								// 7.最终调用传入的匿名内部类 getEarlyBeanReference() 方法
 								singletonObject = singletonFactory.getObject();
+								// 8.(二级缓存)早期单实例对象Map 放入单例对象，保证始终只有一个代理对象
 								this.earlySingletonObjects.put(beanName, singletonObject);
+								// 9.(三级缓存)单例工厂Map 移除单例工厂
 								this.singletonFactories.remove(beanName);
 							}
 						}
