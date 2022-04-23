@@ -174,17 +174,19 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	private SecurityContextProvider securityContextProvider;
 
 	/** Map from bean name to merged RootBeanDefinition. */
+	/** 从bean名称映射到合并的RootBeanDefinition。*/
 	private final Map<String, RootBeanDefinition> mergedBeanDefinitions = new ConcurrentHashMap<>(256);
 
 	/** Names of beans that have already been created at least once. */
+	/** 已至少创建一次的 bean 的名称。*/
 	private final Set<String> alreadyCreated = Collections.newSetFromMap(new ConcurrentHashMap<>(256));
 
 	/** Names of beans that are currently in creation. */
-	/** 当前正在创建的bean的名称。*/
-	private final ThreadLocal<Object> prototypesCurrentlyInCreation =
-			new NamedThreadLocal<>("Prototype beans currently in creation");
+	/** 当前正在创建的(原型)bean的名称。*/
+	private final ThreadLocal<Object> prototypesCurrentlyInCreation = new NamedThreadLocal<>("Prototype beans currently in creation");
 
 	/** Application startup metrics. **/
+	/** 应用程序启动指标。*/
 	private ApplicationStartup applicationStartup = ApplicationStartup.DEFAULT;
 
 	/**
