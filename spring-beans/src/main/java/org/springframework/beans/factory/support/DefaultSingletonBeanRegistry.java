@@ -146,17 +146,27 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/**
 	 * Add the given singleton factory for building the specified singleton
 	 * if necessary.
+	 * 如有必要，添加给定的单例工厂以构建指定的单例。
 	 * <p>To be called for eager registration of singletons, e.g. to be able to
 	 * resolve circular references.
-	 * @param beanName the name of the bean
+	 * <p>被要求急切注册单例，例如能够解决循环引用。
+	 *
+	 * @param beanName         the name of the bean
+	 *                         bean的名称
 	 * @param singletonFactory the factory for the singleton object
+	 *                         单例对象的工厂
 	 */
 	protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {
 		Assert.notNull(singletonFactory, "Singleton factory must not be null");
+		// 同步锁(一级缓存)单例对象Map
 		synchronized (this.singletonObjects) {
+			// (一级缓存)单例对象Map key不包含beanName时
 			if (!this.singletonObjects.containsKey(beanName)) {
+				// (三级缓存)单例工厂Map 放入单例工厂
 				this.singletonFactories.put(beanName, singletonFactory);
+				// (二级缓存)早期单例对象Map 移除早期单例对象
 				this.earlySingletonObjects.remove(beanName);
+				// 注册单例Set 添加bean名称
 				this.registeredSingletons.add(beanName);
 			}
 		}
@@ -165,6 +175,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	@Override
 	@Nullable
 	public Object getSingleton(String beanName) {
+		// 根据beanName获取单例(允许早期引用)
 		return getSingleton(beanName, true);
 	}
 
